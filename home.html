@@ -1,32 +1,59 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <p id="food"></p>
+Codex JavaScript Sandbox
+Clear all
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js"></script>
-    <script type="text/javascript">
-      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQOpwfisz9SdyqFukXAroE-aU06cUO-cj7H_zKb50WXzFlu5FGVwjKh0RpC_lseAeLn1z3jRSqDWuSu/pub?output=csv';
+/* make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background */
+var canvas = document.createElement('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+canvas.style.backgroundImage = 'url(https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg)';
+document.body.appendChild(canvas);
 
-      function init() {
-        Papa.parse(public_spreadsheet_url, {
-          download: true,
-          header: true,
-          complete: showInfo
-        })
-      }
+/* make the background fit screen */
+canvas.style.backgroundSize = 'cover';
 
-      window.addEventListener('DOMContentLoaded', init)
+/* draw stars going right to left. */
+var ctx = canvas.getContext('2d');
+var stars = [];
+for (var i = 0; i < 100; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 2 + 1,
+    speed: Math.random() * 0.1 + 0.05
+  });
+}
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < stars.length; i++) {
+    var star = stars[i];
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2, false);
+    ctx.fill();
+    star.x -= star.speed;
+    if (star.x < 0) {
+      star.x = canvas.width;
+      star.y = Math.random() * canvas.height;
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
 
-      function showInfo(results) {
-        var data = results.data
+/* make starts white */
+ctx.fillStyle = 'white';
 
-        // data comes through as a simple array since simpleSheet is turned on
-        alert("Successfully processed " + data.length + " rows!")
-        document.getElementById("food").innerHTML = "<strong>Foods:</strong> " + [ data[0].Name, data[1].Name, data[2].Name ].join(", ");
-        console.log(data);
-      }
+/* make stars glow */
+ctx.shadowColor = 'white';
+ctx.shadowBlur = 10;
 
-      document.write("The published spreadsheet is located at <a target='_new' href='" + public_spreadsheet_url + "'>" + public_spreadsheet_url + "</a>");        
-    </script>
-   </body>
-</html>
+/* make stars move 5x faster */
+for (var i = 0; i < stars.length; i++) {
+  stars[i].speed *= 5;
+}
+
+/* play music file in loop : https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3 */
+var audio = document.createElement('audio');
+audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+audio.loop = true;
+audio.play();
+
