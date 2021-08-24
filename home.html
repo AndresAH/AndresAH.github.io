@@ -48,10 +48,8 @@ for (var i = 0; i < stars.length; i++) {
   stars[i].speed *= 5;
 }
 
-var audio = document.createElement('audio');
-audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-audio.loop = true;
-audio.autoplay();
+var audio =  new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+  audio.play();
 });
         </script>
     </head>
