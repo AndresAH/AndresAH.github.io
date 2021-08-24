@@ -35,7 +35,7 @@ function draw() {
       star.y = Math.random() * canvas.height;
     }
   }
-  requestAnimationFrame(draw);
+  window.requestAnimationFrame(draw);
 }
 draw();
 
@@ -48,11 +48,36 @@ for (var i = 0; i < stars.length; i++) {
   stars[i].speed *= 5;
 }
 
+var audio = document.createElement('audio');
+audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+audio.autoplay = true;
+document.body.appendChild(audio);
 
+var ship = document.createElement('img');
+ship.src = 'https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png';
+ship.style.position = 'absolute';
+ship.style.left = '50%';
+ship.style.top = '50%';
+ship.style.transform = 'translate(-50%, -50%)';
+ship.style.zIndex = '1';
+document.body.appendChild(ship);
+
+ship.style.width = '50px';
+ship.style.height = '50px';
+
+ship.style.transform = 'rotate(90deg)';
+
+var shipX = canvas.width/2;
+var shipY = canvas.height/2;
+function moveShip() {
+  shipX += (Math.random() - 0.5) * 0.5;
+  shipY += (Math.random() - 0.5) * 0.5;
+  ship.style.left = shipX + 'px';
+  ship.style.top = shipY + 'px';
+  window.requestAnimationFrame(moveShip);
+}
+moveShip();
 });
-            
-    var audio =  new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
-  audio.play();
         </script>
     </head>
     <body style="margin: 0;">
