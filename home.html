@@ -41,8 +41,8 @@ draw();
 
 ctx.fillStyle = 'white';
 
-ctx.shadowColor = 'white';
 ctx.shadowBlur = 10;
+ctx.shadowColor = 'white';
 
 for (var i = 0; i < stars.length; i++) {
   stars[i].speed *= 5;
@@ -53,8 +53,8 @@ ship.src = 'https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.
 ship.style.width = '50px';
 ship.style.height = '50px';
 ship.style.position = 'absolute';
-ship.style.left = (window.innerWidth - 50) / 2 + 'px';
-ship.style.top = (window.innerHeight - 50) / 2 + 'px';
+ship.style.left = window.innerWidth / 2 - 25 + 'px';
+ship.style.top = window.innerHeight / 2 - 25 + 'px';
 document.body.appendChild(ship);
 
 var mouse = {
@@ -73,14 +73,8 @@ function fly() {
   var angle = Math.atan2(dy, dx);
   shipAngle = (angle + Math.PI / 2) * (180 / Math.PI);
   ship.style.transform = 'rotate(' + shipAngle + 'deg)';
-  var distance = Math.sqrt(dx * dx + dy * dy);
-  if (distance > shipSpeed) {
-    ship.style.left = (ship.offsetLeft + shipSpeed * Math.cos(angle)) + 'px';
-    ship.style.top = (ship.offsetTop + shipSpeed * Math.sin(angle)) + 'px';
-  } else {
-    ship.style.left = mouse.x + 'px';
-    ship.style.top = mouse.y + 'px';
-  }
+  ship.style.left = ship.offsetLeft + Math.cos(angle) * shipSpeed + 'px';
+  ship.style.top = ship.offsetTop + Math.sin(angle) * shipSpeed + 'px';
   requestAnimationFrame(fly);
 }
 fly();
@@ -88,8 +82,8 @@ fly();
 var words = document.createElement('div');
 words.innerHTML = 'Welcome to the future';
 words.style.position = 'absolute';
-words.style.left = (window.innerWidth - words.offsetWidth) / 2 + 'px';
-words.style.top = (window.innerHeight - words.offsetHeight) / 2 + 'px';
+words.style.left = window.innerWidth / 2 - 100 + 'px';
+words.style.top = window.innerHeight / 2 - 100 + 'px';
 document.body.appendChild(words);
 
 words.style.fontSize = '40px';
@@ -99,20 +93,18 @@ words.style.textShadow = '0 0 10px white';
 function fadeOut(el, ms) {
   var opacity = 1;
   var timer = setInterval(function () {
-    opacity = opacity - 0.1;
+    opacity -= 0.05;
     el.style.opacity = opacity;
-    if (opacity <= 0.1) {
+    if (opacity <= 0.05) {
       clearInterval(timer);
       el.style.display = 'none';
     }
-  }, ms);
+  }, ms / 100);
 }
 
 setTimeout(function () {
   fadeOut(words, 100);
 }, 10000);
-
-list.style.opacity = 0;
 
 var commandsArray = [
   'make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background',
@@ -131,13 +123,13 @@ var commandsArray = [
   'set list transparency to 0',
   'make a function that makes list go from 0 to 100 transparency over ms',
   'add rounded and borderless button to the very top left of canvas that say "show prompts" which is night blue',
-  'run fadeIn on button click'
+  'run fadeIn on button click" by comma into array'
 ];
 
 var list = document.createElement('ul');
 list.style.position = 'absolute';
 list.style.left = '30%';
-list.style.top = '30%';
+list.style.top = '0';
 list.style.fontSize = '20px';
 list.style.color = 'white';
 document.body.appendChild(list);
@@ -152,21 +144,21 @@ list.style.opacity = 0;
 function fadeIn(el, ms) {
   var opacity = 0;
   var timer = setInterval(function () {
-    opacity = opacity + 0.1;
+    opacity += 0.05;
     el.style.opacity = opacity;
     if (opacity >= 1) {
       clearInterval(timer);
     }
-  }, ms);
+  }, ms / 100);
 }
 
 var button = document.createElement('button');
 button.innerHTML = 'show prompts';
 button.style.position = 'absolute';
-button.style.left = '20px';
-button.style.top = '20px';
+button.style.left = '0';
+button.style.top = '0';
 button.style.border = 'none';
-button.style.backgroundColor = '#003366';
+button.style.backgroundColor = '#2c3e50';
 button.style.color = 'white';
 button.style.fontSize = '20px';
 button.style.padding = '10px';
