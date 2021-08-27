@@ -85,35 +85,54 @@ function fly() {
 }
 fly();
 
-var welcome = document.createElement('div');
-welcome.innerHTML = 'Welcome to the future.';
-welcome.style.position = 'absolute';
-welcome.style.left = (window.innerWidth - welcome.offsetWidth) / 2 + 'px';
-welcome.style.top = (window.innerHeight - welcome.offsetHeight) / 2 + 'px';
-document.body.appendChild(welcome);
+var words = document.createElement('div');
+words.innerHTML = 'Welcome to the future';
+words.style.position = 'absolute';
+words.style.left = (window.innerWidth - words.offsetWidth) / 2 + 'px';
+words.style.top = (window.innerHeight - words.offsetHeight) / 2 + 'px';
+document.body.appendChild(words);
 
-welcome.style.fontSize = '40px';
-welcome.style.color = 'white';
-welcome.style.textShadow = '0 0 10px white';
+words.style.fontSize = '40px';
+words.style.color = 'white';
+words.style.textShadow = '0 0 10px white';
 
 function fadeOut(el, ms) {
   var opacity = 1;
   var timer = setInterval(function () {
-    opacity -= 0.05;
+    opacity = opacity - 0.1;
     el.style.opacity = opacity;
-    if (opacity <= 0.05) {
+    if (opacity <= 0.1) {
       clearInterval(timer);
       el.style.display = 'none';
     }
-  }, ms / 100);
+  }, ms);
 }
 
 setTimeout(function () {
-  fadeOut(welcome, 100);
+  fadeOut(words, 100);
 }, 10000);
 
-var commands = "make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background,make the background fit screen,draw stars going right to left.,make starts white,make stars glow,make stars move 5x faster,Add music to website :https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3,add ship img:https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png to canvas ,shrink it scale 1,move to center of window,set imageMode(Center).,move ship position towards cursor over a 10ms interval, moving at speed of 1, and rotate its angle towards cursor with a rotation offset of 90 degrees.";
-var commandsArray = commands.split(',');
+list.style.opacity = 0;
+
+var commandsArray = [
+  'make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background',
+  'make the background fit screen.',
+  'draw stars going right to left.',
+  'make stars white',
+  'make stars glow',
+  'make stars move 5x faster',
+  'add ship img:https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png to canvas.shrink it scale 1 with a width and height of 50px. place at center of window.',
+  'fly the ship towards cursor over a 10ms interval. fly moving speed of 3. Rotate it\'s angle towards cursor with a rotation offset of 90.',
+  'add words to canvas (Welcome to the future).',
+  'make welcome size 40, white, glow.',
+  'make a function that makes welcome go from 100 to 0 transparency over ms',
+  'run fadeout after 10 seconds with an interval of 100 ms',
+  'add each element in commandsArray  into a bullet list and show the list on the canvas top and left 30% with a font size of 20 and white font.',
+  'set list transparency to 0',
+  'make a function that makes list go from 0 to 100 transparency over ms',
+  'add rounded and borderless button to the very top left of canvas that say "show prompts" which is night blue',
+  'run fadeIn on button click'
+];
 
 var list = document.createElement('ul');
 list.style.position = 'absolute';
@@ -123,9 +142,9 @@ list.style.fontSize = '20px';
 list.style.color = 'white';
 document.body.appendChild(list);
 for (var i = 0; i < commandsArray.length; i++) {
-  var bullet = document.createElement('li');
-  bullet.innerHTML = commandsArray[i];
-  list.appendChild(bullet);
+  var listItem = document.createElement('li');
+  listItem.innerHTML = commandsArray[i];
+  list.appendChild(listItem);
 }
 
 list.style.opacity = 0;
@@ -133,28 +152,28 @@ list.style.opacity = 0;
 function fadeIn(el, ms) {
   var opacity = 0;
   var timer = setInterval(function () {
-    opacity += 0.05;
+    opacity = opacity + 0.1;
     el.style.opacity = opacity;
     if (opacity >= 1) {
       clearInterval(timer);
     }
-  }, ms / 100);
+  }, ms);
 }
 
-var showPrompts = document.createElement('button');
-showPrompts.innerHTML = 'Show Prompts';
-showPrompts.style.position = 'absolute';
-showPrompts.style.left = '0px';
-showPrompts.style.top = '0px';
-showPrompts.style.border = 'none';
-showPrompts.style.backgroundColor = '#2c3e50';
-showPrompts.style.color = 'white';
-showPrompts.style.fontSize = '20px';
-showPrompts.style.padding = '10px';
-showPrompts.style.borderRadius = '5px';
-document.body.appendChild(showPrompts);
+var button = document.createElement('button');
+button.innerHTML = 'show prompts';
+button.style.position = 'absolute';
+button.style.left = '0px';
+button.style.top = '0px';
+button.style.border = 'none';
+button.style.backgroundColor = '#003366';
+button.style.color = 'white';
+button.style.fontSize = '20px';
+button.style.padding = '10px';
+button.style.borderRadius = '5px';
+document.body.appendChild(button);
 
-showPrompts.addEventListener('click', function () {
+button.addEventListener('click', function () {
   fadeIn(list, 100);
 });
 });
