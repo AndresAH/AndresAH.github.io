@@ -71,10 +71,16 @@ function fly() {
   var dx = mouse.x - ship.offsetLeft;
   var dy = mouse.y - ship.offsetTop;
   var angle = Math.atan2(dy, dx);
-  shipAngle = angle * 180 / Math.PI + 90;
+  shipAngle = (angle + Math.PI / 2) * (180 / Math.PI);
   ship.style.transform = 'rotate(' + shipAngle + 'deg)';
-  ship.style.top = (ship.offsetTop + shipSpeed * Math.sin(angle)) + 'px';
-  ship.style.left = (ship.offsetLeft + shipSpeed * Math.cos(angle)) + 'px';
+  var distance = Math.sqrt(dx * dx + dy * dy);
+  if (distance > shipSpeed) {
+    ship.style.left = (ship.offsetLeft + shipSpeed * Math.cos(angle)) + 'px';
+    ship.style.top = (ship.offsetTop + shipSpeed * Math.sin(angle)) + 'px';
+  } else {
+    ship.style.left = mouse.x + 'px';
+    ship.style.top = mouse.y + 'px';
+  }
   requestAnimationFrame(fly);
 }
 fly();
@@ -82,9 +88,8 @@ fly();
 var welcome = document.createElement('div');
 welcome.innerHTML = 'Welcome to the future.';
 welcome.style.position = 'absolute';
-welcome.style.left = '50%';
-welcome.style.top = '50%';
-welcome.style.transform = 'translate(-50%, -50%)';
+welcome.style.left = (window.innerWidth - welcome.offsetWidth) / 2 + 'px';
+welcome.style.top = (window.innerHeight - welcome.offsetHeight) / 2 + 'px';
 document.body.appendChild(welcome);
 
 welcome.style.fontSize = '40px';
@@ -94,13 +99,13 @@ welcome.style.textShadow = '0 0 10px white';
 function fadeOut(el, ms) {
   var opacity = 1;
   var timer = setInterval(function () {
-    opacity = opacity - 0.1;
+    opacity -= 0.05;
     el.style.opacity = opacity;
-    if (opacity <= 0.1) {
+    if (opacity <= 0.05) {
       clearInterval(timer);
       el.style.display = 'none';
     }
-  }, ms);
+  }, ms / 100);
 }
 
 setTimeout(function () {
@@ -118,9 +123,9 @@ list.style.fontSize = '20px';
 list.style.color = 'white';
 document.body.appendChild(list);
 for (var i = 0; i < commandsArray.length; i++) {
-  var listItem = document.createElement('li');
-  listItem.innerHTML = commandsArray[i];
-  list.appendChild(listItem);
+  var bullet = document.createElement('li');
+  bullet.innerHTML = commandsArray[i];
+  list.appendChild(bullet);
 }
 
 list.style.opacity = 0;
@@ -128,26 +133,25 @@ list.style.opacity = 0;
 function fadeIn(el, ms) {
   var opacity = 0;
   var timer = setInterval(function () {
-    opacity = opacity + 0.1;
+    opacity += 0.05;
     el.style.opacity = opacity;
     if (opacity >= 1) {
       clearInterval(timer);
-      el.style.display = 'block';
     }
-  }, ms);
+  }, ms / 100);
 }
 
 var showPrompts = document.createElement('button');
-showPrompts.innerHTML = 'show prompts';
+showPrompts.innerHTML = 'Show Prompts';
 showPrompts.style.position = 'absolute';
-showPrompts.style.left = '10px';
-showPrompts.style.top = '10px';
+showPrompts.style.left = '0px';
+showPrompts.style.top = '0px';
 showPrompts.style.border = 'none';
 showPrompts.style.backgroundColor = '#2c3e50';
 showPrompts.style.color = 'white';
 showPrompts.style.fontSize = '20px';
 showPrompts.style.padding = '10px';
-showPrompts.style.borderRadius = '10px';
+showPrompts.style.borderRadius = '5px';
 document.body.appendChild(showPrompts);
 
 showPrompts.addEventListener('click', function () {
