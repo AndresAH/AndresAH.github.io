@@ -19,7 +19,7 @@ for (var i = 0; i < 100; i++) {
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     radius: Math.random() * 2 + 1,
-    speed: Math.random() * 0.1 + 0.01
+    speed: Math.random() * 0.1 + 0.05
   });
 }
 function draw() {
@@ -35,7 +35,7 @@ function draw() {
       star.y = Math.random() * canvas.height;
     }
   }
-  window.requestAnimationFrame(draw);
+  requestAnimationFrame(draw);
 }
 draw();
 
@@ -48,22 +48,13 @@ for (var i = 0; i < stars.length; i++) {
   stars[i].speed *= 5;
 }
 
-var audio = document.createElement('audio');
-audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-audio.autoplay = true;
-document.body.appendChild(audio);
-
 var ship = document.createElement('img');
 ship.src = 'https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png';
 ship.style.width = '50px';
 ship.style.height = '50px';
 ship.style.position = 'absolute';
-ship.style.left = '50%';
-ship.style.top = '50%';
-ship.style.transform = 'scale(1)';
-ship.style.transformOrigin = '50% 50%';
-ship.style.imageRendering = 'pixelated';
-ship.style.imageMode = 'center';
+ship.style.left = (window.innerWidth - 50) / 2 + 'px';
+ship.style.top = (window.innerHeight - 50) / 2 + 'px';
 document.body.appendChild(ship);
 
 var mouse = {
@@ -74,64 +65,94 @@ document.addEventListener('mousemove', function (e) {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
-var shipSpeed = 1;
 var shipAngle = 0;
-var shipRotationOffset = 90;
-function moveShip() {
+var shipSpeed = 3;
+function fly() {
   var dx = mouse.x - ship.offsetLeft;
   var dy = mouse.y - ship.offsetTop;
   var angle = Math.atan2(dy, dx);
-  ship.style.transform = 'rotate(' + (angle * 180 / Math.PI + shipRotationOffset) + 'deg)';
-  ship.style.left = ship.offsetLeft + Math.cos(angle) * shipSpeed + 'px';
-  ship.style.top = ship.offsetTop + Math.sin(angle) * shipSpeed + 'px';
+  shipAngle = angle * 180 / Math.PI + 90;
+  ship.style.transform = 'rotate(' + shipAngle + 'deg)';
+  ship.style.top = (ship.offsetTop + shipSpeed * Math.sin(angle)) + 'px';
+  ship.style.left = (ship.offsetLeft + shipSpeed * Math.cos(angle)) + 'px';
+  requestAnimationFrame(fly);
 }
-setInterval(moveShip, 10);
+fly();
 
 var welcome = document.createElement('div');
 welcome.innerHTML = 'Welcome to the future.';
 welcome.style.position = 'absolute';
 welcome.style.left = '50%';
 welcome.style.top = '50%';
-welcome.style.transform = 'scale(1)';
-welcome.style.transformOrigin = '50% 50%';
-welcome.style.textAlign = 'center';
-welcome.style.fontSize = '50px';
-welcome.style.color = 'white';
-welcome.style.fontFamily = 'sans-serif';
-welcome.style.textShadow = '2px 2px 0px black';
+welcome.style.transform = 'translate(-50%, -50%)';
 document.body.appendChild(welcome);
 
-function fadeOut(el) {
+welcome.style.fontSize = '40px';
+welcome.style.color = 'white';
+welcome.style.textShadow = '0 0 10px white';
+
+function fadeOut(el, ms) {
   var opacity = 1;
   var timer = setInterval(function () {
-    opacity -= 0.01;
+    opacity = opacity - 0.1;
     el.style.opacity = opacity;
-    if (opacity <= 0.01) {
+    if (opacity <= 0.1) {
       clearInterval(timer);
       el.style.display = 'none';
     }
-  }, 10);
+  }, ms);
 }
 
 setTimeout(function () {
-  fadeOut(welcome);
+  fadeOut(welcome, 100);
 }, 10000);
 
-var commands = 'make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background,make the background fit screen,draw stars going right to left.,make starts white,make stars glow,make stars move 5x faster,Add music to website :https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3,add ship img:https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png to canvas ,shrink it scale 1,move to center of window,set imageMode(Center).,move ship position towards cursor over a 10ms interval, moving at speed of 1, and rotate its angle towards cursor with a rotation offset of 90 degrees.'.split(',');
+var commands = "make a canvas with https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg as the background,make the background fit screen,draw stars going right to left.,make starts white,make stars glow,make stars move 5x faster,Add music to website :https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3,add ship img:https://www.clipartmax.com/png/full/31-317366_rocket-launch-clipart.png to canvas ,shrink it scale 1,move to center of window,set imageMode(Center).,move ship position towards cursor over a 10ms interval, moving at speed of 1, and rotate its angle towards cursor with a rotation offset of 90 degrees.";
+var commandsArray = commands.split(',');
 
-var list = document.createElement('ol');
-for (var i = 0; i < commands.length; i++) {
-  var li = document.createElement('li');
-  li.innerHTML = commands[i];
-  list.appendChild(li);
-}
-document.body.appendChild(list);
-
+var list = document.createElement('ul');
 list.style.position = 'absolute';
 list.style.left = '30%';
 list.style.top = '30%';
 list.style.fontSize = '20px';
 list.style.color = 'white';
+document.body.appendChild(list);
+for (var i = 0; i < commandsArray.length; i++) {
+  var listItem = document.createElement('li');
+  listItem.innerHTML = commandsArray[i];
+  list.appendChild(listItem);
+}
+
+list.style.opacity = 0;
+
+function fadeIn(el, ms) {
+  var opacity = 0;
+  var timer = setInterval(function () {
+    opacity = opacity + 0.1;
+    el.style.opacity = opacity;
+    if (opacity >= 1) {
+      clearInterval(timer);
+      el.style.display = 'block';
+    }
+  }, ms);
+}
+
+var showPrompts = document.createElement('button');
+showPrompts.innerHTML = 'show prompts';
+showPrompts.style.position = 'absolute';
+showPrompts.style.left = '10px';
+showPrompts.style.top = '10px';
+showPrompts.style.border = 'none';
+showPrompts.style.backgroundColor = '#2c3e50';
+showPrompts.style.color = 'white';
+showPrompts.style.fontSize = '20px';
+showPrompts.style.padding = '10px';
+showPrompts.style.borderRadius = '10px';
+document.body.appendChild(showPrompts);
+
+showPrompts.addEventListener('click', function () {
+  fadeIn(list, 100);
+});
 });
         </script>
     </head>
